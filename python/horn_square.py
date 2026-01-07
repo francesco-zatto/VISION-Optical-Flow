@@ -24,7 +24,7 @@ if __name__ == "__main__":
 
     debug_gradient(I1, I2)
 
-    u, v = horn(I1, I2, 0.0001, N=10_000)
+    u, v = horn(I1, I2)
     computeColored = computeColor(u, v, True)
     plt.imshow(computeColored)
     plt.show()

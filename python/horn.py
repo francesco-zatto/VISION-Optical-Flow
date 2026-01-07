@@ -1,11 +1,8 @@
-# Write the function horn(I1,I2,alpha,N) that returns compute the velocity map between images I1
-# and I2 according to the Horn and Schunck method.
-
 from gradhorn import gradhorn
 import numpy as np
 from scipy.signal import convolve2d
 
-def horn(I1,I2,alpha,N):
+def horn(I1, I2, alpha=0.1, N=1000):
     Ix, Iy, It = gradhorn(I1, I2)
     u = v = np.zeros_like(Ix)
     A = np.array([
