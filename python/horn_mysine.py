@@ -12,10 +12,11 @@ def find_optimal_alpha(I1, I2, GT, alphas, N=1000):
     errors = []
     for alpha in alphas:
         u, v = horn(I1, I2, alpha, N)
-        mean, _ = error_functions.end_point_error((u, v), GT)
+        mean, _ = error_functions.angular_error((u, v), GT)
+        print(f'Alpha: {alpha}, Error: {mean:.5f}')
         errors.append(mean)
     optimal_alpha = alphas[np.argmin(errors)]
-    print(f'Optimal alpha: {optimal_alpha} with EPE: {min(errors)}')
+    print(f'Optimal alpha: {optimal_alpha} with EPE: {min(errors):.5f}')
     return optimal_alpha
 
 if __name__ == "__main__":
