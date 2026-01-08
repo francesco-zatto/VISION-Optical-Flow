@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 from middlebury import computeColor
 import error_functions as err
 
-def plot_flow_results(u, v, step=10):
+def plot_flow_results(u, v, step=10, save_path='result.png'):
     plt.figure(figsize=(12, 5))
     
     plt.subplot(1, 2, 1)
@@ -16,8 +16,9 @@ def plot_flow_results(u, v, step=10):
                u[::step, ::step], v[::step, ::step], 
                color='red', angles='xy')
     plt.gca().invert_yaxis()
+    plt.savefig('../plot/' + save_path)
 
-    plt.show()
+    # plt.show()
 
 def get_stats(w_r, w_e, alpha):  
     epe_m, epe_s = err.end_point_error(w_r, w_e)

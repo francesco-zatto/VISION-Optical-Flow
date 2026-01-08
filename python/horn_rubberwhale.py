@@ -12,6 +12,8 @@ if __name__ == "__main__":
     I2 = np.array(Image.open(IM2_PATH).convert('L'), dtype=np.float32)
     GT = readflo(GT_PATH)
 
-    run_horn(I1, I2, GT, N=1000, plot=True)
+    alphas = [1.0, 50, 100, 150, 200]
+
+    run_horn(I1, I2, GT, N=1000, alphas=alphas, plot=True, data_name='rubberwhale')
 
     

@@ -26,4 +26,6 @@ if __name__ == "__main__":
 
     debug_gradient(I1, I2)
 
-    run_horn(I1, I2, GT=GT, N=1000, plot=True)
+    alphas = [0.001, 0.01, 0.1, 1.0]
+
+    run_horn(I1, I2, GT=GT, N=1000, alphas=alphas, plot=True, data_name='square')

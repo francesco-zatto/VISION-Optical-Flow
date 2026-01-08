@@ -20,7 +20,7 @@ def horn(I1, I2, alpha=0.1, N=1000):
         v = v_avg - Iy * update_term
     return u, v
 
-def run_alpha_search(I1, I2, GT, alphas, N=1000, plot=False, compute_stats=True):
+def run_alpha_search(I1, I2, GT, alphas, N=1000, plot=False, compute_stats=True, data_name=''):
     errors = []
     stats = {} if GT is not None else None
     optimal_alpha = None
@@ -33,7 +33,7 @@ def run_alpha_search(I1, I2, GT, alphas, N=1000, plot=False, compute_stats=True)
         else:
             print(f'Alpha: {alpha}')
         if plot:
-            utils.plot_flow_results(u, v)
+            utils.plot_flow_results(u, v, save_path=f'{data_name}_{alpha}.png')
         if GT is not None and compute_stats:
             stats.update(utils.get_stats(GT, w_e, alpha))
             errors.append(mean)
@@ -42,14 +42,14 @@ def run_alpha_search(I1, I2, GT, alphas, N=1000, plot=False, compute_stats=True)
         print(f'Optimal alpha: {optimal_alpha} with angular error: {min(errors):.5f}')
     return optimal_alpha, stats
 
-def run_horn(I1, I2, GT=None, alphas=None, N=1000, plot=False):
+def run_horn(I1, I2, GT=None, alphas=None, N=1000, plot=False, data_name=''):
     if alphas is None:
         alphas = 10.0 ** np.linspace(-4, 1, 6)
 
-    optimal_alpha, stats = run_alpha_search(I1, I2, GT, alphas, plot=plot, compute_stats=True)
+    optimal_alpha, stats = run_alpha_search(I1, I2, GT, alphas, N=N, plot=plot, compute_stats=True, data_name=data_name)
 
     if optimal_alpha:
         u, v = horn(I1, I2, optimal_alpha, N)
-        utils.plot_flow_results(u, v)
+        utils.plot_flow_results(u, v, save_path=f'{data_name}_{optimal_alpha}.png')
     if stats:
-        utils.print_stats(stats)
+        utils.print_stats(stats)  
