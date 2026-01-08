@@ -1,5 +1,4 @@
-from horn import horn
-from middlebury import computeColor
+from horn import run_horn
 import matplotlib.pyplot as plt
 
 IM1_PATH = '../data/nasa/nasa9.png'
@@ -9,7 +8,4 @@ if __name__ == "__main__":
     I1 = plt.imread(IM1_PATH)
     I2 = plt.imread(IM2_PATH)
 
-    u, v = horn(I1, I2)
-    computeColored = computeColor(u, v, True)
-    plt.imshow(computeColored)
-    plt.show()
+    run_horn(I1, I2, N=1000, plot=True)
