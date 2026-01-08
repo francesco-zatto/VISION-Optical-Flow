@@ -1,11 +1,12 @@
 from gradhorn import gradhorn
-from horn import horn
-from middlebury import computeColor
+from horn import run_horn
+from middlebury import readflo
 import matplotlib.pyplot as plt
 
 
 IM1_PATH = '../data/square/square9.png'
 IM2_PATH = '../data/square/square10.png'
+GT_PATH = '../data/square/correct_square.flo'
 
 def debug_gradient(I1, I2, show=False):
     Ix, Iy, It = gradhorn(I1, I2)
@@ -21,10 +22,8 @@ def debug_gradient(I1, I2, show=False):
 if __name__ == "__main__":
     I1 = plt.imread(IM1_PATH)
     I2 = plt.imread(IM2_PATH)
+    GT = readflo(GT_PATH)
 
     debug_gradient(I1, I2)
 
-    u, v = horn(I1, I2)
-    computeColored = computeColor(u, v, True)
-    plt.imshow(computeColored)
-    plt.show()
+    run_horn(I1, I2, GT=GT, N=1000, plot=True)

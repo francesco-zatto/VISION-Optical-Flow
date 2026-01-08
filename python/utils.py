@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 from middlebury import computeColor
 import error_functions as err
 
-def plot_flow_results(u, v, step=10, title="Optical Flow"):
+def plot_flow_results(u, v, step=10):
     plt.figure(figsize=(12, 5))
     
     plt.subplot(1, 2, 1)
@@ -15,8 +15,8 @@ def plot_flow_results(u, v, step=10, title="Optical Flow"):
     plt.quiver(x[::step, ::step], y[::step, ::step], 
                u[::step, ::step], v[::step, ::step], 
                color='red', angles='xy')
-    
-    plt.tight_layout()
+    plt.gca().invert_yaxis()
+
     plt.show()
 
 def get_stats(w_r, w_e, alpha):  
