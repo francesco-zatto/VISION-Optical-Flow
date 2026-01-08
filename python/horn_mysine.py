@@ -1,23 +1,12 @@
 from horn import horn
-import error_functions
+import utils
 import matplotlib.pyplot as plt
 import numpy as np
-from middlebury import readflo, computeColor
+from middlebury import readflo
 
 IM1_PATH = '../data/mysine/mysine9.png'
 IM2_PATH = '../data/mysine/mysine10.png'
 GT_PATH = '../data/mysine/correct_mysine.flo'
-
-def find_optimal_alpha(I1, I2, GT, alphas, N=1000):
-    errors = []
-    for alpha in alphas:
-        u, v = horn(I1, I2, alpha, N)
-        mean, _ = error_functions.angular_error((u, v), GT)
-        print(f'Alpha: {alpha}, Error: {mean:.5f}')
-        errors.append(mean)
-    optimal_alpha = alphas[np.argmin(errors)]
-    print(f'Optimal alpha: {optimal_alpha} with EPE: {min(errors):.5f}')
-    return optimal_alpha
 
 if __name__ == "__main__":
     I1 = plt.imread(IM1_PATH)
@@ -26,10 +15,10 @@ if __name__ == "__main__":
     GT = GT[:-1, :-1].transpose(2, 0, 1)
 
     alphas = 10.0 ** np.linspace(-5, 1, 7)
-    optimal_alpha = find_optimal_alpha(I1, I2, GT, alphas)
+    optimal_alpha, stats = utils.run_alpha_search(I1, I2, GT, alphas, plot=True, compute_stats=True)
 
-    u, v = horn(I1, I2, optimal_alpha, N=1000)
-    computeColored = computeColor(u, v, True)
-    plt.imshow(computeColored)
-    plt.show()
+    u, v = horn(I1, I2, optimal_alpha)
+    if not stats:
+        stats = utils.get_stats(GT, (u, v))
+    utils.plot_flow_results(u, v)
     
