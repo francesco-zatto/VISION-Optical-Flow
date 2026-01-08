@@ -1,7 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from middlebury import computeColor
-from horn import horn
 import error_functions as err
 
 def plot_flow_results(u, v, step=10, title="Optical Flow"):
@@ -21,27 +20,22 @@ def plot_flow_results(u, v, step=10, title="Optical Flow"):
     plt.show()
 
 def get_stats(w_r, w_e, alpha):  
+    epe_m, epe_s = err.end_point_error(w_r, w_e)
+    ang_m, ang_s = err.angular_error(w_r, w_e)
+    nrm_m, nrm_s = err.norm_error(w_r, w_e)
+    rel_m, rel_s = err.relative_norm_error(w_r, w_e)
+
     return {
         alpha: {
-            "EPE": err.end_point_error(w_r, w_e),
-            "Angular": err.angular_error(w_r, w_e),
-            "Norm": err.norm_error(w_r, w_e),
-            "RelNorm": err.relative_norm_error(w_r, w_e)
+            "EPE": {"mean": epe_m, "std": epe_s},
+            "Angular": {"mean": ang_m, "std": ang_s},
+            "Norm": {"mean": nrm_m, "std": nrm_s},
+            "RelNorm": {"mean": rel_m, "std": rel_s}
         }
     }
 
-def run_alpha_search(I1, I2, GT, alphas, N=1000, plot=False, compute_stats=True):
-    errors = []
-    stats = {}
-    for alpha in alphas:
-        u, v = horn(I1, I2, alpha, N)
-        mean, _ = err.angular_error((u, v), GT)
-        print(f'Alpha: {alpha}, Error: {mean:.5f}')
-        if plot:
-            plot_flow_results(u, v, title=f'Alpha: {alpha}, Error: {mean:.5f}')
-        if compute_stats:
-            stats.update(get_stats(GT, (u, v), alpha))
-        errors.append(mean)
-    optimal_alpha = alphas[np.argmin(errors)]
-    print(f'Optimal alpha: {optimal_alpha} with angular error: {min(errors):.5f}')
-    return optimal_alpha, stats
+def print_stats(stats):
+    for alpha, measures in stats.items():
+        print(f"Alpha: {alpha}")
+        for measure, values in measures.items():
+            print(f"  {measure}: {values['mean']:.5f} +- {values['std']:.5f}")

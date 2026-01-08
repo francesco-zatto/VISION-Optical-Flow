@@ -1,5 +1,4 @@
-from horn import horn
-import utils
+from horn import run_horn
 import matplotlib.pyplot as plt
 import numpy as np
 from middlebury import readflo
@@ -14,11 +13,5 @@ if __name__ == "__main__":
     GT = readflo(GT_PATH)
     GT = GT[:-1, :-1].transpose(2, 0, 1)
 
-    alphas = 10.0 ** np.linspace(-5, 1, 7)
-    optimal_alpha, stats = utils.run_alpha_search(I1, I2, GT, alphas, plot=True, compute_stats=True)
-
-    u, v = horn(I1, I2, optimal_alpha)
-    if not stats:
-        stats = utils.get_stats(GT, (u, v))
-    utils.plot_flow_results(u, v)
+    u, v, optimal_alpha, stats = run_horn(I1, I2, GT=GT, N=1000, plot=True)
     
