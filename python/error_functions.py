@@ -16,6 +16,21 @@ def angular_error(w_r, w_e):
     
     return np.mean(ang_error), np.std(ang_error)
 
+import numpy as np
+
+def angular_error_space_time(w_r, w_e):
+    dot_product = np.sum(w_r * w_e, axis=2)
+    num = 1 + dot_product
+    
+    den_r = np.sqrt(1 + np.sum(w_r**2, axis=2))
+    den_e = np.sqrt(1 + np.sum(w_e**2, axis=2))
+
+    cos = num / (den_r * den_e)
+    cos = np.clip(cos, -1.0, 1.0)
+    
+    ang_error = np.arccos(cos)
+    return np.mean(ang_error), np.std(ang_error)
+
 def norm_error(w_r, w_e):
     norm_r = np.linalg.norm(w_r, axis=2)
     norm_e = np.linalg.norm(w_e, axis=2)

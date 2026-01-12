@@ -25,13 +25,15 @@ def get_stats(w_r, w_e, alpha):
     ang_m, ang_s = err.angular_error(w_r, w_e)
     nrm_m, nrm_s = err.norm_error(w_r, w_e)
     rel_m, rel_s = err.relative_norm_error(w_r, w_e)
+    ang_spacetime_m, ang_spacetime_s = err.angular_error_space_time(w_r, w_e)
 
     return {
         alpha: {
             "EPE": {"mean": epe_m, "std": epe_s},
             "Angular": {"mean": ang_m, "std": ang_s},
             "Norm": {"mean": nrm_m, "std": nrm_s},
-            "RelNorm": {"mean": rel_m, "std": rel_s}
+            "RelNorm": {"mean": rel_m, "std": rel_s},
+            "AngularSpaceTime": {"mean": ang_spacetime_m, "std": ang_spacetime_s},
         }
     }
 
