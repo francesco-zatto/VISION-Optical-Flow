@@ -47,14 +47,12 @@ def lucas(I1, I2, window_size = 5, window_type='square'):
             AT_W_A = AT_W @ A
             AT_W_B = AT_W @ B
 
-            AT_A = A.T @ A
-
             det = AT_W_A[0,0]*AT_W_A[1,1] - AT_W_A[1,0] * AT_W_A[0,1]
 
-            if det < 1e-6:
+            if det < 1e-12:
                 continue
 
-            AT_W_A_inv = np.array([[AT_A[1,1], -AT_A[0,1]],[-AT_A[1,0], AT_A[0,0]]]) / det
+            AT_W_A_inv = np.array([[AT_W_A[1,1], -AT_W_A[0,1]],[-AT_W_A[1,0], AT_W_A[0,0]]]) / det
 
             w = AT_W_A_inv @ AT_W_B
 
