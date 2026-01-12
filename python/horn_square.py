@@ -2,6 +2,7 @@ from gradhorn import gradhorn
 from horn import run_horn
 from middlebury import readflo
 import matplotlib.pyplot as plt
+import utils
 
 
 IM1_PATH = '../data/square/square9.png'
@@ -29,3 +30,7 @@ if __name__ == "__main__":
     alphas = [0.001, 0.01, 0.1, 1.0]
 
     run_horn(I1, I2, GT=GT, N=1000, alphas=alphas, plot=True, data_name='square')
+
+    GT_u = GT[:, :, 0]
+    GT_v = GT[:, :, 1]
+    utils.plot_flow_results(GT_u, GT_v, save_path=f'square_gt.png')

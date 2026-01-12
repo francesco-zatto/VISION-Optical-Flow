@@ -2,6 +2,7 @@ from horn import run_horn
 from middlebury import readflo
 import numpy as np
 from PIL import Image
+import utils
 
 IM1_PATH = '../data/rubberwhale/frame10.png'
 IM2_PATH = '../data/rubberwhale/frame11.png'
@@ -15,5 +16,9 @@ if __name__ == "__main__":
     alphas = [1.0, 50, 100, 150, 200]
 
     run_horn(I1, I2, GT, N=1000, alphas=alphas, plot=True, data_name='rubberwhale')
+
+    GT_u = GT[:, :, 0]
+    GT_v = GT[:, :, 1]
+    utils.plot_flow_results(GT_u, GT_v, save_path=f'rubberwhale_gt.png')
 
     
