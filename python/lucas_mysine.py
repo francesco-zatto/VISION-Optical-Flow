@@ -13,5 +13,5 @@ if __name__ == "__main__":
 
     window_sizes = [3,5,7,9,11]
 
-    run_lucas(I1, I2, GT=GT, window_sizes=window_sizes, plot=False, data_name='lucas_mysine')
+    run_lucas(I1, I2, GT=GT, window_sizes=window_sizes, window_type='square', plot=False, data_name='lucas_mysine')
     
