@@ -1,0 +1,3 @@
+data/eval-data-gray/   data without ground truth
+data/other-data-gray/  data with ground truth
+data/other-gt-flow/    ground truth are here
