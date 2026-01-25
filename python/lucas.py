@@ -62,8 +62,9 @@ def lucas(I1, I2, window_size = 5, window_type='square'):
     return u, v
 
 def run_window_size_search(I1, I2, GT, window_sizes, window_type='square', plot=False, compute_stats=True, data_name=''):
+    print(f"MULTI-RESOLUTION --- {window_type}")
     errors = []
-    stats = {} if GT is not None else None
+    stats = {} 
     optimal_window_size = None
     for window_size in window_sizes:
         u, v = lucas(I1, I2, window_size, window_type)
@@ -83,7 +84,6 @@ def run_window_size_search(I1, I2, GT, window_sizes, window_type='square', plot=
         print(f'Optimal window_size: {optimal_window_size} with angular error: {min(errors):.5f}')
     return optimal_window_size, stats
 
-
 def run_lucas(I1, I2, GT=None, window_sizes=[3,5,7,9,11], window_type='square', plot=False, data_name=''):
     optimal_window_size, stats = run_window_size_search(I1, I2, GT, window_sizes, window_type, plot=plot, compute_stats=True, data_name=data_name)
 
@@ -92,3 +92,62 @@ def run_lucas(I1, I2, GT=None, window_sizes=[3,5,7,9,11], window_type='square', 
         utils.plot_flow_results(u, v, save_path=f'{data_name}_{optimal_window_size}.png')
     if stats:
         utils.print_stats(stats)
+
+def run_window_search(
+    I1, I2, GT,
+    window_sizes,
+    window_types=['square','gaussian','circular'],
+    plot=False,
+    compute_stats=True,
+    data_name=''
+):
+    print("\nLUCAS")
+
+    errors = {}          # (window_type, window_size) -> mean error
+    stats = {}           # aggregated stats
+    optimal = None       # (window_type, window_size)
+
+    for window_type in window_types:
+        print(f"\nWINDOW TYPE: {window_type}")
+
+        for window_size in window_sizes:
+            u, v = lucas(I1, I2, window_size, window_type)
+            w_e = np.stack((u, v), axis=2)
+
+            if GT is not None:
+                mean, _ = err.angular_error(GT, w_e)
+                errors[(window_type, window_size)] = mean
+                print(f'  window_size: {window_size}, error: {mean:.5f}')
+            else:
+                print(f'  window_size: {window_size}')
+
+            if plot:
+                utils.plot_flow_results(
+                    u, v,
+                    save_path=f'{data_name}_{window_type}_{window_size}.png'
+                )
+
+            if GT is not None and compute_stats:
+                stats[(window_type, window_size)] = \
+                    utils.get_stats_double(GT, w_e, window_size, window_type)
+
+    if GT is not None and errors:
+        optimal = min(errors, key=lambda k: errors[k])
+        print(
+            f'\nOptimal configuration: '
+            f'window_type={optimal[0]}, window_size={optimal[1]} '
+            f'with angular error: {errors[optimal]:.5f}'
+        )
+
+        return optimal[0], optimal[1], optimal, stats
+    else:
+        return None, None, None, stats
+
+def run_lucas_window(I1, I2, GT=None, window_sizes=[3,5,7,9,11], window_type=['square'], plot=False, data_name=''):
+    optimal_window_type, optimal_window_size, optimal, stats = run_window_search(I1, I2, GT, window_sizes, window_type, plot=plot, compute_stats=True, data_name=data_name)
+
+    if optimal_window_size:
+        u, v = lucas(I1, I2, optimal_window_size)
+        utils.plot_flow_results(u, v, save_path=f'../plot2/lucas_{data_name}_{optimal_window_size}_{optimal_window_type}.png')
+    if stats:
+        utils.print_stats_double(stats)
