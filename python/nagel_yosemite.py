@@ -1,4 +1,4 @@
-from nagel import run_nagel
+from nagel import run_nagel, plot_error_vs_delta
 from middlebury import readflo
 import matplotlib.pyplot as plt
 
@@ -14,3 +14,5 @@ if __name__ == "__main__":
     alphas = [0.01, 0.05, 0.1, 0.2]
 
     run_nagel(I1, I2, GT=GT, N=1000, alphas=alphas, plot=True, data_name='yosemite')
+
+    plot_error_vs_delta(I1, I2, GT, deltas=[0.01, 0.05, 0.1, 1], alpha=0.01, N=500, data_name='yosemite')

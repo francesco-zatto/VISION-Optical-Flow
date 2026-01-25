@@ -1,4 +1,4 @@
-from nagel import run_nagel
+from nagel import run_nagel, plot_error_vs_delta
 from middlebury import readflo
 import numpy as np
 from PIL import Image
@@ -17,7 +17,8 @@ if __name__ == "__main__":
 
     alphas = [0.001, 0.01, 0.1, 1.0]
 
-    run_nagel(I1, I2, GT, N=1000, alphas=alphas, plot=True, data_name='rubberwhale')
+    # run_nagel(I1, I2, GT, N=1000, alphas=alphas, plot=True, data_name='rubberwhale')
 
+    plot_error_vs_delta(I1, I2, GT, deltas=[0.01, 0.05, 0.1, 1], alpha=0.01, N=500, data_name='rubberwhale')
 
     

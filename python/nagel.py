@@ -1,5 +1,6 @@
 import numpy as np
 import error_functions as err
+import matplotlib.pyplot as plt
 import utils
 from gradhorn import gradhorn
 from scipy.signal import convolve2d 
@@ -96,3 +97,29 @@ def run_nagel(I1, I2, GT=None, delta=0.1, alphas=None, N=1000, plot=False, data_
         utils.plot_flow_results(u, v, save_path=f'plot_nagel/{data_name}_{optimal_alpha}.png')
     if stats:
         utils.print_stats(stats)  
+
+def plot_error_vs_delta(I1, I2, GT, deltas, alpha, N=1000, data_name=''):
+    mean_errors = {}
+    
+    for d in deltas:
+        u, v = nagel(I1, I2, N, alpha, delta=d)
+        
+        if np.isnan(u).any() or np.isinf(u).any():
+            mean_errors[d] = np.nan
+            continue
+
+        w_e = np.stack((u, v), axis=2)
+        mean_error, _ = err.angular_error(GT, w_e)
+        mean_errors[d] = mean_error
+
+    plt.figure(figsize=(10, 6))
+    plt.plot(deltas, mean_errors.values(), marker='o', linestyle='-', color='b')
+    plt.xscale('log') 
+    plt.xlabel('Delta (log scale)')
+    plt.ylabel('Mean Angular Error')
+    plt.title(f'Nagel Method Error vs. Delta (Alpha={alpha}, N={N})')
+    plt.grid(True, which="both", ls="-", alpha=0.5)
+    plt.savefig(f'plot_nagel/{data_name}_delta.png')
+    plt.show()
+
+    return mean_errors
